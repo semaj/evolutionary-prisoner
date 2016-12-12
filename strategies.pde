@@ -5,6 +5,7 @@ interface Strategy {
 
 class TitForTat implements Strategy {
   Map<Player, Integer> history;
+
   TitForTat() {
     history = new HashMap<Player, Integer>();
   }

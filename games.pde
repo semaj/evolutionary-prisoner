@@ -11,13 +11,15 @@ class PrisonersDilemma implements Game {
 
   public class Payouts {
     public static final int MUTUAL_COOPERATION = 3;
-    public static final int MUTUAL_DEFECTION = -1;
-    public static final int DEFECTION = 4;
+    public static final int MUTUAL_DEFECTION = 1;
+    public static final int DEFECTION = 5;
     public static final int COOPERATION = 0;
   }
   Tuple<Integer, Integer> versus(Player one, Player two) {
     int playerOneMove = one.play(two);
     int playerTwoMove = two.play(one);
+    one.retroUpdate(two, playerTwoMove);
+    two.retroUpdate(one, playerOneMove);
     if (playerOneMove == Moves.DEFECT && playerTwoMove == Moves.DEFECT) {
       return new Tuple(Payouts.MUTUAL_DEFECTION, Payouts.MUTUAL_DEFECTION);
     } else if (playerOneMove == Moves.COOPERATE && playerTwoMove == Moves.COOPERATE) {
@@ -27,6 +29,7 @@ class PrisonersDilemma implements Game {
     } else {
       return new Tuple(Payouts.DEFECTION, Payouts.COOPERATION);
     }
+
   }
 }
 

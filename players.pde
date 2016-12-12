@@ -11,4 +11,8 @@ class Player {
   int play(Player opponent) {
     return this.strategy.play(opponent);
   }
+  
+  void retroUpdate(Player opponent, int move) {
+    this.strategy.retroUpdate(opponent, move);
+  }
 }

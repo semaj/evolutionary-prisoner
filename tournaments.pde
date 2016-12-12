@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.List;
+import java.util.Collections;
 
 class Tournament {
   Matcher matcher;
@@ -7,9 +8,9 @@ class Tournament {
   int numRounds;
   List<Player> players;
   Game game;
-  LearningRule rule;
+  Learner rule;
   
-  Tournament(Game game, Matcher matcher, float clustering, int numRounds, List<Player> players, LearningRule rule) {
+  Tournament(Game game, Matcher matcher, float clustering, int numRounds, List<Player> players, Learner rule) {
     this.game = game;
     this.rule = rule;
     this.players = players;
