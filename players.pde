@@ -8,7 +8,7 @@ class Player {
     this.strategy = strategy;
   }
   
-  Move play(Player opponent) {
+  int play(Player opponent) {
     return this.strategy.play(opponent);
   }
 }

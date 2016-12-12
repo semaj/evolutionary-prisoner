@@ -4,5 +4,5 @@ interface Matcher {
 
 interface LearningRule {
   // Modifies players based on their payouts from last round
-  void learn(Map<Player, AtomicInteger> lastRound);
+  void learn(Map<Player, Integer> lastRound);
 }
