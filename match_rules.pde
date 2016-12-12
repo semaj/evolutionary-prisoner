@@ -29,6 +29,13 @@ class RandomLearner implements Learner {
   }
   
   void learn(Map<Player, Integer> lastRound) {
-    
+    for (Player player : lastRound.keySet()) {
+      int r = round(random(1, 2));
+      Strategy strategy = new TitForTat();
+      if (r == 1) {
+        strategy = new AllDefect();
+      }
+      player.setStrategy(strategy);
+    }
   }
 }

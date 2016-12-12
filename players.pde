@@ -15,4 +15,12 @@ class Player {
   void retroUpdate(Player opponent, int move) {
     this.strategy.retroUpdate(opponent, move);
   }
+  
+  Strategy getStrategy() {
+    return this.strategy;
+  }
+  
+  void setStrategy(Strategy strategy) {
+    this.strategy = strategy;
+  }
 }
