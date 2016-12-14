@@ -102,7 +102,37 @@ export class OverallLearner implements Learner {
   }
 }
 
+export class NeighborhoodLearner implements Learner {
 
+  learn(payouts: Dictionary<Player, number>, players: Player[][]): void {
+    let strategyPayouts = new Dictionary<Strategy, number>();
+    payouts.forEach((player: Player, payout) => {
+      let strategy: Strategy = player.getStrategy();
+      if (strategyPayouts.containsKey(strategy)) {
+        let currentValue: number = strategyPayouts.getValue(strategy);
+        strategyPayouts.setValue(strategy, currentValue + payout);
+      } else {
+        strategyPayouts.setValue(strategy, payout);
+      }
+    });
+    let sum: number = strategyPayouts.values().reduce((a, b) => a + b);
+    players.forEach((player_row: Player[]) => {
+      player_row.forEach((player: Player) => {
+        let r: number = Math.floor(Math.random() * sum);
+        let acc = 0;
+        let found = false; // hack
+        console.log("here");
+        strategyPayouts.forEach((strategy: Strategy, payout: number) => {
+          acc += payout;
+          if (r < acc && !found) {
+            player.setStrategy(strategy);
+            found = true;
+          }
+        });
+      });
+    });
+  }
+}
 
 
 

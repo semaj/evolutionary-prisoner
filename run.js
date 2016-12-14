@@ -18,8 +18,8 @@ function setup() {
   }
   let matcher = new RandomMatcher(players);
   let learner = new OverallLearner();
-  t = new Tournament(pd, matcher, players, learner, 1, 100, 100);
-  frameRate(1);
+  t = new Tournament(pd, matcher, players, learner, 1, 1, 100);
+  frameRate(5);
   createCanvas(800, 800);
   stroke(255);
 }
