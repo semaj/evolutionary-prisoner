@@ -4,26 +4,29 @@ let t;
 function setup() {
   let pd = new PrisonersDilemma();
   for (let i = 0; i < 10; i++) {
+    let row = [];
     for (let j = 0; j < 10; j++) {
-      let r = random(1, 2);
+      let r = Math.round(random(1, 2));
       let strategy = new TitForTat();
       if (r == 1) {
         strategy = new AllDefect();
       }
 
-      players.push(new Player(i, j, strategy));
+      row.push(new Player(i, j, strategy));
     }
+    players.push(row);
   }
   let matcher = new RandomMatcher(players);
-  let learner = new RandomLearner();
-  t = new Tournament(pd, matcher, players, learner, 1, 15, 10);
+  let learner = new OverallLearner();
+  t = new Tournament(pd, matcher, players, learner, 1, 100, 50);
+  frameRate(1);
   createCanvas(800, 800);
   stroke(255);
 }
 
 function draw() {
   let modifier = 50;
-  players.forEach(function(player) {
+  Player.flatPlayers(players).forEach(function(player) {
     if (player.strategy.constructor == AllDefect) {
       fill(153);
     } else {

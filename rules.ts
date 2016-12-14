@@ -27,18 +27,18 @@ function shuffle(array) {
 }
 
 export class RandomMatcher implements Matcher {
-  constructor(private players: Player[]) {
+  constructor(private players: Player[][]) {
   }
 
   matchUp(games: number): Dictionary<Player, Player[]> {
     let result = new Dictionary<Player, Player[]>();
-    let that = this;
-    this.players.forEach((player: Player) => {
+    let flat: Player[] = Player.flatPlayers(this.players);
+    flat.forEach((player: Player) => {
       let games_temp = games;
       let matches: Player[] = [];
       while (games_temp > 0) {
-        let index = Math.floor(Math.random() * this.players.length);
-        let opponent = this.players[index];
+        let index = Math.floor(Math.random() * flat.length);
+        let opponent = flat[index];
         if (opponent == player) {
           continue;
         }
@@ -53,13 +53,13 @@ export class RandomMatcher implements Matcher {
 
 export interface Learner {
   // Modifies players based on their payouts from last round
-  learn(lastRound: Dictionary<Player, number>): void;
+  learn(payouts: Dictionary<Player, number>, players: Player[][]): void;
 }
 
 export class RandomLearner implements Learner {
 
-  learn(lastRound: Dictionary<Player, number>): void {
-    lastRound.keys().forEach(function(player: Player) {
+  learn(payouts: Dictionary<Player, number>, players): void {
+    payouts.keys().forEach(function(player: Player) {
       let r = Math.round(Math.random());
       let strategy: Strategy = new TitForTat();
       if (r == 0) {
@@ -69,3 +69,42 @@ export class RandomLearner implements Learner {
     });
   }
 }
+
+export class OverallLearner implements Learner {
+
+  learn(payouts: Dictionary<Player, number>, players: Player[][]): void {
+    let strategyPayouts = new Dictionary<Strategy, number>();
+    payouts.forEach((player: Player, payout) => {
+      let strategy: Strategy = player.getStrategy();
+      console.log(strategy.constructor + " : " + payout);
+      if (strategyPayouts.containsKey(strategy)) {
+        let currentValue: number = strategyPayouts.getValue(strategy);
+        strategyPayouts.setValue(strategy, currentValue + payout);
+      } else {
+        strategyPayouts.setValue(strategy, payout);
+      }
+    });
+    console.log("BREAK");
+    let sum: number = strategyPayouts.values().reduce((a, b) => a + b);
+    players.forEach((player_row: Player[]) => {
+      player_row.forEach((player: Player) => {
+        let r: number = Math.floor(Math.random() * sum);
+        let acc = 0;
+        let found = false; // hack
+        strategyPayouts.forEach((strategy: Strategy, payout: number) => {
+          acc += payout;
+          if (r < acc && !found) {
+            player.setStrategy(strategy);
+            found = true;
+          }
+        });
+      });
+    });
+  }
+}
+
+
+
+
+
+

@@ -5,12 +5,12 @@ import { Learner, Matcher } from "./rules";
 
 export class Tournament {
 
-  constructor(private game: Game, private matcher: Matcher, private players: Player[], private learner: Learner, private clustering: number, private numRounds: number, private gamesPerRound: number) {
+  constructor(private game: Game, private matcher: Matcher, private players: Player[][], private learner: Learner, private clustering: number, private numRounds: number, private gamesPerRound: number) {
   }
 
   play(): void {
     let payouts = new Dictionary<Player, number>();
-    this.players.forEach(function(player: Player) {
+    Player.flatPlayers(this.players).forEach(function(player: Player) {
       payouts.setValue(player, 0);
     });
     for (let i = 0; i < this.numRounds; i++) {
@@ -22,11 +22,11 @@ export class Tournament {
           payouts.setValue(opponent, payouts.getValue(opponent) + results[1]);
         });
       });
-      this.learner.learn(payouts);
     }
+    this.learner.learn(payouts, this.players);
   }
 
-  getPlayers(): Player[] {
+  getPlayers(): Player[][] {
     return this.players;
   }
 }

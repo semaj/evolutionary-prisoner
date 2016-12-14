@@ -2,6 +2,11 @@ import { Strategy } from "./strategies";
 export class Player {
   constructor(public x: number, public y: number, private strategy: Strategy) { }
 
+
+  static flatPlayers(players: Player[][]): Player[] {
+    return players.reduce((a, b) => a.concat(b));
+  }
+
   play(opponent: Player): number {
     return this.strategy.play(opponent);
   }
