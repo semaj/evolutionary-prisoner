@@ -76,7 +76,6 @@ export class OverallLearner implements Learner {
     let strategyPayouts = new Dictionary<Strategy, number>();
     payouts.forEach((player: Player, payout) => {
       let strategy: Strategy = player.getStrategy();
-      console.log(strategy.constructor + " : " + payout);
       if (strategyPayouts.containsKey(strategy)) {
         let currentValue: number = strategyPayouts.getValue(strategy);
         strategyPayouts.setValue(strategy, currentValue + payout);
@@ -84,13 +83,13 @@ export class OverallLearner implements Learner {
         strategyPayouts.setValue(strategy, payout);
       }
     });
-    console.log("BREAK");
     let sum: number = strategyPayouts.values().reduce((a, b) => a + b);
     players.forEach((player_row: Player[]) => {
       player_row.forEach((player: Player) => {
         let r: number = Math.floor(Math.random() * sum);
         let acc = 0;
         let found = false; // hack
+        console.log("here");
         strategyPayouts.forEach((strategy: Strategy, payout: number) => {
           acc += payout;
           if (r < acc && !found) {

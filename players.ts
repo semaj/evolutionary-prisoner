@@ -22,4 +22,8 @@ export class Player {
   setStrategy(strategy: Strategy): void {
     this.strategy = strategy;
   }
+
+  toString(): string {
+    return "Player:" + this.x + "," + this.y;
+  }
 }

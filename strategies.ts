@@ -5,7 +5,7 @@ import { PrisonersDilemmaMoves } from "./games";
 export interface Strategy {
   play(opponent: Player): number;
   retroUpdate(opponent: Player, move: number): void;
-  getName(): string;
+  toString(): string;
 }
 
 export class TitForTat implements Strategy {
@@ -27,8 +27,8 @@ export class TitForTat implements Strategy {
     this.hist.setValue(opponent, move);
   }
 
-  getName(): string {
-    return name;
+  toString(): string {
+    return "tit-for-tat";
   }
 
 }
@@ -40,7 +40,8 @@ export class AllDefect implements Strategy {
 
   retroUpdate(opponent: Player, move: number): void { }
 
-  getName(): string {
-    return name;
+  toString(): string {
+    return "all-defect";
   }
+
 }

@@ -13,7 +13,8 @@ export class Tournament {
     Player.flatPlayers(this.players).forEach(function(player: Player) {
       payouts.setValue(player, 0);
     });
-    for (let i = 0; i < this.numRounds; i++) {
+    //for (let i = 0; i < this.numRounds; i++) {
+    if (this.numRounds > 0) {
       this.matcher.matchUp(this.gamesPerRound)
             .forEach((player: Player, opponents: Player[]) => {
         opponents.forEach((opponent: Player) => {
@@ -22,8 +23,9 @@ export class Tournament {
           payouts.setValue(opponent, payouts.getValue(opponent) + results[1]);
         });
       });
+      this.learner.learn(payouts, this.players);
     }
-    this.learner.learn(payouts, this.players);
+    this.numRounds--;
   }
 
   getPlayers(): Player[][] {
