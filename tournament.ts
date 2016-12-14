@@ -33,7 +33,7 @@ export class Tournament {
         });
       });
     }
-    this.learner.learn(payouts, this.players);
+    this.learner.learn(payouts);
   }
 
   getPlayers(): Player[][] {

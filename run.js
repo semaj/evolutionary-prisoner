@@ -17,9 +17,9 @@ function setup() {
     players.push(row);
   }
   let matcher = new RandomMatcher(players);
-  let learner = new OverallLearner();
-  t = new Tournament(pd, matcher, players, learner, 1, 1, 100);
-  frameRate(5);
+  let learner = new NeighborhoodLearner(1, players);
+  t = new Tournament(pd, matcher, players, learner, 2, 2, 100);
+  frameRate(1);
   createCanvas(800, 800);
   stroke(255);
 }

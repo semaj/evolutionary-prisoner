@@ -7,6 +7,7 @@ window.Player = players.Player;
 window.Learner = rules.Learner;
 window.RandomLearner = rules.RandomLearner;
 window.OverallLearner = rules.OverallLearner;
+window.NeighborhoodLearner = rules.NeighborhoodLearner;
 window.RandomMatcher = rules.RandomMatcher;
 window.Matcher = rules.Matcher;
 window.Tournament = tournament.Tournament;

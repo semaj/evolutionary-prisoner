@@ -1,6 +1,7 @@
-import { Dictionary } from 'typescript-collections';
+import { Set, Dictionary } from 'typescript-collections';
 import { Player } from "./players";
 import { Strategy, TitForTat, AllDefect } from "./strategies";
+import * as Combinatorics from "js-combinatorics";
 
 export interface Matcher {
   matchUp(games: number): Dictionary<Player, Player[]>;
@@ -53,12 +54,12 @@ export class RandomMatcher implements Matcher {
 
 export interface Learner {
   // Modifies players based on their payouts from last round
-  learn(payouts: Dictionary<Player, number>, players: Player[][]): void;
+  learn(payouts: Dictionary<Player, number>): void;
 }
 
 export class RandomLearner implements Learner {
 
-  learn(payouts: Dictionary<Player, number>, players): void {
+  learn(payouts: Dictionary<Player, number>): void {
     payouts.keys().forEach(function(player: Player) {
       let r = Math.round(Math.random());
       let strategy: Strategy = new TitForTat();
@@ -72,7 +73,7 @@ export class RandomLearner implements Learner {
 
 export class OverallLearner implements Learner {
 
-  learn(payouts: Dictionary<Player, number>, players: Player[][]): void {
+  learn(payouts: Dictionary<Player, number>): void {
     let strategyPayouts = new Dictionary<Strategy, number>();
     payouts.forEach((player: Player, payout) => {
       let strategy: Strategy = player.getStrategy();
@@ -84,52 +85,68 @@ export class OverallLearner implements Learner {
       }
     });
     let sum: number = strategyPayouts.values().reduce((a, b) => a + b);
-    players.forEach((player_row: Player[]) => {
-      player_row.forEach((player: Player) => {
-        let r: number = Math.floor(Math.random() * sum);
-        let acc = 0;
-        let found = false; // hack
-        console.log("here");
-        strategyPayouts.forEach((strategy: Strategy, payout: number) => {
-          acc += payout;
-          if (r < acc && !found) {
-            player.setStrategy(strategy);
-            found = true;
-          }
-        });
+    payouts.keys().forEach((player: Player) => {
+      let r: number = Math.floor(Math.random() * sum);
+      let acc = 0;
+      let found = false; // hack
+      console.log("here");
+      strategyPayouts.forEach((strategy: Strategy, payout: number) => {
+        acc += payout;
+        if (r < acc && !found) {
+          player.setStrategy(strategy);
+          found = true;
+        }
       });
     });
   }
 }
 
-export class NeighborhoodLearner implements Learner {
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
 
-  learn(payouts: Dictionary<Player, number>, players: Player[][]): void {
-    let strategyPayouts = new Dictionary<Strategy, number>();
-    payouts.forEach((player: Player, payout) => {
-      let strategy: Strategy = player.getStrategy();
-      if (strategyPayouts.containsKey(strategy)) {
-        let currentValue: number = strategyPayouts.getValue(strategy);
-        strategyPayouts.setValue(strategy, currentValue + payout);
-      } else {
-        strategyPayouts.setValue(strategy, payout);
-      }
-    });
-    let sum: number = strategyPayouts.values().reduce((a, b) => a + b);
-    players.forEach((player_row: Player[]) => {
-      player_row.forEach((player: Player) => {
-        let r: number = Math.floor(Math.random() * sum);
-        let acc = 0;
-        let found = false; // hack
-        console.log("here");
-        strategyPayouts.forEach((strategy: Strategy, payout: number) => {
-          acc += payout;
-          if (r < acc && !found) {
-            player.setStrategy(strategy);
-            found = true;
-          }
+export class NeighborhoodLearner implements Learner {
+  playerToNeighbors: Dictionary<Player, Player[]>;
+
+  constructor(private neighborhood: number, players: Player[][]) {
+    let nums = new Set<number>();
+    for (let i = 0; i <= this.neighborhood; i++) {
+      nums.add(i);
+      nums.add(i * -1);
+    }
+    let indexes: [number, number][] = Combinatorics.permutation(nums.toArray(),
+                                                                 2);
+    let colSize = players.length;
+    this.playerToNeighbors = new Dictionary<Player, Player[]>();
+    players.forEach((playerRow: Player[]) => {
+      let rowSize = playerRow.length;
+      playerRow.forEach((player: Player) => {
+        let neighbors: Player[] = [];
+        indexes.forEach((deltas) => {
+          let xDelta = deltas[0];
+          let yDelta = deltas[1];
+          let iX: number = mod(player.x + xDelta, rowSize);
+          let iY: number = mod(player.y + yDelta, colSize);
+          let neighbor: Player = players[iX][iY];
+          neighbors.push(neighbor);
         });
+        this.playerToNeighbors.setValue(player, neighbors);
       });
+    });
+  }
+
+  learn(payouts: Dictionary<Player, number>): void {
+    this.playerToNeighbors.forEach((player, neighbors) => {
+      let strategy: Strategy = player.getStrategy();
+      let payout: number = payouts.getValue(player);
+      neighbors.forEach((neighbor) => {
+        let neighborPayout: number = payouts.getValue(neighbor);
+        if (neighborPayout > payout) {
+          strategy = neighbor.getStrategy();
+          payout = neighborPayout;
+        }
+      });
+      player.setStrategy(strategy);
     });
   }
 }
