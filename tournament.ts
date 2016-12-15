@@ -7,7 +7,7 @@ export class Tournament {
 
   constructor(private game: Game, private matcher: Matcher,
               private players: Player[][], private learner: Learner,
-              private clustering: number, private numRounds: number,
+              private numRounds: number,
               private gamesPerRound: number, private neighborhood: number) {
   }
 
@@ -29,7 +29,7 @@ export class Tournament {
         opponents.forEach((opponent: Player) => {
           let results: [number, number] = this.game.versus(player, opponent);
           payouts.setValue(player, payouts.getValue(player) + results[0]);
-          payouts.setValue(opponent, payouts.getValue(opponent) + results[1]);
+          //payouts.setValue(opponent, payouts.getValue(opponent) + results[1]);
         });
       });
     }

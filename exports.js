@@ -15,6 +15,7 @@ window.Tournament = tournament.Tournament;
 window.Strategy = strategies.Strategy;
 window.TitForTat = strategies.TitForTat;
 window.AllDefect = strategies.AllDefect;
+window.AllCooperate = strategies.AllCooperate;
 window.Game = games.Game;
 window.PrisonersDilemma = games.PrisonersDilemma;
 window.PrisonersDilemmaMoves = games.PrisonersDilemmaMoves;

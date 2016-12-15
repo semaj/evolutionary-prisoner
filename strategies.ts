@@ -43,5 +43,16 @@ export class AllDefect implements Strategy {
   toString(): string {
     return "all-defect";
   }
+}
 
+export class AllCooperate implements Strategy {
+  play(opponent: Player): number {
+    return PrisonersDilemmaMoves.COOPERATE;
+  }
+
+  retroUpdate(opponent, move) {}
+
+  toString() : string {
+    return "all-cooperate";
+  }
 }
