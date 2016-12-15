@@ -6,7 +6,7 @@
 
 # Evolutionary Prisoners
 ## Installation / Local Usage
-* You need `browserify`, `typescript`, & `typescript-collections` (downloade via `npm`).
+* You need `browserify`, `typescript`, `js-combinatorics`, & `typescript-collections` (downloaded via `npm`).
 To run locally:
   ```
   make
