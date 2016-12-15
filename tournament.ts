@@ -40,4 +40,3 @@ export class Tournament {
     return this.players;
   }
 }
-

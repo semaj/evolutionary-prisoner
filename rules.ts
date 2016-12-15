@@ -52,6 +52,69 @@ export class RandomMatcher implements Matcher {
   }
 }
 
+export class NeighborhoodMatcher implements Matcher {
+  playerToNeighbors: Dictionary<Player, Player[]>;
+
+  constructor(private neighborhood: number, private players: Player[][],
+              private neighborhoodProportion: number) {
+    let nums = new Set<number>();
+    for (let i = 0; i <= this.neighborhood; i++) {
+      nums.add(i);
+      nums.add(i * -1);
+    }
+    let indexes: [number, number][] = Combinatorics.permutation(nums.toArray(),
+                                                                 2);
+    let colSize = players.length;
+    this.playerToNeighbors = new Dictionary<Player, Player[]>();
+    players.forEach((playerRow: Player[]) => {
+      let rowSize = playerRow.length;
+      playerRow.forEach((player: Player) => {
+        let neighbors: Player[] = [];
+        indexes.forEach((deltas) => {
+          let xDelta = deltas[0];
+          let yDelta = deltas[1];
+          let iX: number = mod(player.x + xDelta, rowSize);
+          let iY: number = mod(player.y + yDelta, colSize);
+          let neighbor: Player = players[iX][iY];
+          neighbors.push(neighbor);
+        });
+        this.playerToNeighbors.setValue(player, neighbors);
+      });
+    });
+  }
+
+  matchUp(games: number): Dictionary<Player, Player[]> {
+    let result = new Dictionary<Player, Player[]>();
+    let flat: Player[] = Player.flatPlayers(this.players);
+    flat.forEach((player: Player) => {
+      let games_temp = games;
+      let matches: Player[] = [];
+      while (games_temp > 0) {
+        let r = Math.random();
+        let neighbors = this.playerToNeighbors.getValue(player);
+        let opponent: Player;
+        if (r < this.neighborhoodProportion) {
+          let index = Math.floor(Math.random() * neighbors.length);
+          opponent = neighbors[index];
+        } else {
+          while (true) {
+            let index = Math.floor(Math.random() * flat.length);
+            opponent = flat[index];
+            if (opponent != player && neighbors.indexOf(opponent) == -1) {
+              break;
+            }
+          }
+        }
+        matches.push(opponent);
+        games_temp--;
+      }
+      result.setValue(player, matches);
+    });
+    return result;
+  }
+
+}
+
 export interface Learner {
   // Modifies players based on their payouts from last round
   learn(payouts: Dictionary<Player, number>): void;
@@ -150,7 +213,3 @@ export class NeighborhoodLearner implements Learner {
     });
   }
 }
-
-
-
-

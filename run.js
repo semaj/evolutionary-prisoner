@@ -16,9 +16,9 @@ function setup() {
     }
     players.push(row);
   }
-  let matcher = new RandomMatcher(players);
+  let matcher = new NeighborhoodMatcher(1, players, 1);
   let learner = new NeighborhoodLearner(1, players);
-  t = new Tournament(pd, matcher, players, learner, 2, 2, 100);
+  t = new Tournament(pd, matcher, players, learner, 2, 10, 1);
   frameRate(1);
   createCanvas(800, 800);
   stroke(255);
@@ -28,7 +28,7 @@ function draw() {
   let modifier = 50;
   Player.flatPlayers(players).forEach(function(player) {
     if (player.strategy.constructor == AllDefect) {
-      fill(153);
+      fill(10, 30, 10);
     } else {
       fill(204, 102, 0);
     }

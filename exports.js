@@ -9,6 +9,7 @@ window.RandomLearner = rules.RandomLearner;
 window.OverallLearner = rules.OverallLearner;
 window.NeighborhoodLearner = rules.NeighborhoodLearner;
 window.RandomMatcher = rules.RandomMatcher;
+window.NeighborhoodMatcher = rules.NeighborhoodMatcher;
 window.Matcher = rules.Matcher;
 window.Tournament = tournament.Tournament;
 window.Strategy = strategies.Strategy;

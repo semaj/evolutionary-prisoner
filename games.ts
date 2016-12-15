@@ -5,17 +5,18 @@ export interface Game {
   versus(one: Player, two: Player): [number, number];
 }
 
-export enum PrisonersDilemmaMoves {
-  DEFECT,
-  COOPERATE
+export class PrisonersDilemmaMoves {
+  static DEFECT: number = 0;
+  static COOPERATE: number = 1;
 }
 
-export enum PrisonersDilemmaPayouts {
-  MUTUAL_COOPERATION,
-  MUTUAL_DEFECTION,
-  DEFECTION,
-  COOPERATION
+export class PrisonersDilemmaPayouts {
+  static MUTUAL_COOPERATION: number = 3;
+  static MUTUAL_DEFECTION: number = 1;
+  static DEFECTION: number = 5;
+  static COOPERATION: number = 0;
 }
+
 export class PrisonersDilemma implements Game {
 
   versus(one: Player, two: Player): [number, number] {
