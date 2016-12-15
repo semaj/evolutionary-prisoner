@@ -28,7 +28,7 @@ function shuffle(array) {
 }
 
 export class RandomMatcher implements Matcher {
-  constructor(private players: Player[][]) {
+  constructor(a, private players: Player[][], b) {
   }
 
   matchUp(games: number): Dictionary<Player, Player[]> {

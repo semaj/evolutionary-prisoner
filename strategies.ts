@@ -6,6 +6,7 @@ export interface Strategy {
   play(opponent: Player): number;
   retroUpdate(opponent: Player, move: number): void;
   toString(): string;
+  color(): number[];
 }
 
 export class TitForTat implements Strategy {
@@ -31,6 +32,10 @@ export class TitForTat implements Strategy {
     return "tit-for-tat";
   }
 
+  color(): number[] {
+    return [0, 0, 255];
+  }
+
 }
 
 export class AllDefect implements Strategy {
@@ -43,6 +48,10 @@ export class AllDefect implements Strategy {
   toString(): string {
     return "all-defect";
   }
+
+  color(): number[] {
+    return [255, 0, 20];
+  }
 }
 
 export class AllCooperate implements Strategy {
@@ -54,5 +63,9 @@ export class AllCooperate implements Strategy {
 
   toString() : string {
     return "all-cooperate";
+  }
+
+  color(): number[] {
+    return [0, 255, 0];
   }
 }
