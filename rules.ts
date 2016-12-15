@@ -120,15 +120,28 @@ export interface Learner {
   learn(payouts: Dictionary<Player, number>): void;
 }
 
+function getStrategy(s) {
+  switch (s) {
+    case "Always Cooperate":
+      return new AllCooperate();
+      break;
+    case "Always Defect":
+      return new AllDefect();
+      break;
+    case "Tit-for-Tat":
+      return new TitForTat();
+      break;
+  }
+}
+
 export class RandomLearner implements Learner {
+
+  constructor(private strategyNames: string) {}
 
   learn(payouts: Dictionary<Player, number>): void {
     payouts.keys().forEach(function(player: Player) {
-      let r = Math.round(Math.random());
-      let strategy: Strategy = new TitForTat();
-      if (r == 0) {
-        strategy = new AllDefect();
-      }
+      let r = Math.round(random(0, 2));
+      let strategy = getStrategy(strategyNames[r]);
       player.setStrategy(strategy);
     });
   }

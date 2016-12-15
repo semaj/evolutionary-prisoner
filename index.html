@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello Web - Processing Test</title>
+    <title>The Repeated Prisoners Dilemma</title>
     <link rel="stylesheet" href="style.css">
     <script src="p5.min.js"></script>
     <script src="p5.dom.js"></script>
@@ -9,9 +9,74 @@
     <script src="run.js"></script>
 </head>
 <body>
-<h1>Processing Test</h1>
-<p>This is my first Processing.js web-based sketch:</p>
+  <p class="text"> ENTER: next turn | BACKSPACE: reset </p>
+  <p class="text"><div style="color:#00FF6C;">ALWAYS COOPERATE</div>
+  <div style="color:#0000FF;">TIT-FOR-TAT</div>
+  <div style="color:#FF0000;">ALWAYS DEFECT</div>
+  </p>
 <div id="sketch"></div>
 </body>
+<xmp theme="united" style="display:none;">
+# A Simulator
+
+## What is the Prisoner's Dilemma?
+
+The Prisoner's Dilemma is a game, played by two players. Each player is being accused of a crime. You are given a choice: either rat out your opponent (defect) or plead ignorance (cooperate).
+
+|          |      DEFECT   |  COOP |
+|----------|:-------------:|------:|
+| DEFECT   |    (1, 1)     | (5,0) |
+| COOP     |    (0,5)      | (3,3) |
+
+Payouts are denoted `(row, column)`. As shown, the most profitable scenario is you defecting and the other cooperating.
+
+## Repeating
+
+However, things change when the game is repeated. When players have the opportunity to remember and analyze their opponents' past moves, there is room for creativity and development. The goal, then, is to maximize payout over some number of games.
+
+This simulator is useful for seeing the viability of given strategies over long periods of time.
+
+### Strategies
+#### Always Defect
+Always choose defect!
+
+#### Always Cooperate
+Always choose cooperate!
+
+### Tit-for-Tat
+Tit-for-tat works as follows: the first time you run into an opponent, cooperate. Subsequently, when you see said opponent, copy its last move. This means if your opponent defected, you will defect (after the first turn). If they cooperate, you cooperate. Tit-for-tat works particular well with its own kind, since the two players will always cooperate.
+
+In this simulator, squares represent players. Each player has a strategy. Every time you hit `ENTER`, a "turn" is played. Each turn can have many "rounds", and in each round each player will play a number of "games".
+
+A "game" is one instance of the dilemma: one player against another player. During a round, the simulator finds the player a number of opponents based on the `Number of Games per Round` parameter above. These opponents are chosen via "matching" rules chosen above.
+
+### Matcher Rules
+#### Random
+In this rule, players are matched up with random opponents.
+
+#### Neighborhood
+In this rule, players have a some tendency to match with their neighbors (as defined by `Neighborhood Size` above). Before choosing a match, the player chooses a number between 0 and 1. If that number is less than `Neighborhood Bias` above, the player chooses a neighbor to match with. When the `Neighborhood Bias` is close to 1, the player will match almost entirely with its neighbors.
+
+The player's total payout is recorded for that round. This processes is repeated depending on the `Number of Rounds` parameter above.
+
+After all of the rounds in a given turn have completed, each player "learns" based on the learning rules above.
+
+### Learning Rules
+#### Random
+In this rule, every player randomly chooses a strategy after every turn.
+
+#### Overall
+In this rule, the total payout of every strategy is summed up at the end of each turn. Every player then chooses their next strategy randomly from the list of strategies; the chance of picking a given strategy is proportional to its proportional total payout from last turn. The better a strategy performed, the more prevalent it will be next turn.
+
+#### Neighborhood
+In this rule, every player examines the total payout of its neighbors (the size of which is defined by the `Neighborhood Size` parameter above). If a given neighbor has a higher payout than the player and the highest amongst the player's other neighbors, the player adopts that neighbor's strategy.
+
+## More
+The code is constructed such that Strategies, Matcher Rules, and Learning Rules are easy to add.
+Development: [here](https://github.com/semaj/evolutionary-prisoner)
+
+</xmp>
+
+<script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
 </html>
 

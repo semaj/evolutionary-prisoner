@@ -155,9 +155,9 @@ function strategy1Select() {
 
 function strategy2Select() {
   strategy2 = createSelect();
-  strategy2.position(10, 500);
+  strategy2.position(10, 510);
   let strategy2Text = createDiv("Strategy 2:");
-  strategy2Text.position(10, 480);
+  strategy2Text.position(10, 490);
   strategies.forEach(function(name) {
     strategy2.option(name);
   });
@@ -169,9 +169,9 @@ function strategy2Select() {
 
 function strategy3Select() {
   strategy3 = createSelect();
-  strategy3.position(10, 540);
+  strategy3.position(10, 560);
   let strategy3Text = createDiv("Strategy 3:");
-  strategy3Text.position(10, 520);
+  strategy3Text.position(10, 540);
   strategies.forEach(function(name) {
     strategy3.option(name);
   });
